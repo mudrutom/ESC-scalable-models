@@ -4,9 +4,9 @@ import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.mllib.tree.DecisionTree
 import org.apache.spark.mllib.tree.configuration.Algo
 import org.apache.spark.mllib.tree.impurity.Gini
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.{SparkConf, SparkContext}
 
-object SparkDecisionTree extends Classifier {
+object SparkDecisionTree extends Classifier with Serializable {
 
 	case class Params(input: String)
 

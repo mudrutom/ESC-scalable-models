@@ -1,9 +1,9 @@
 package cz.cvut.esc.models.classifiers
 
 import org.apache.spark.mllib.classification.SVMWithSGD
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.{SparkConf, SparkContext}
 
-object SparkSVM extends Classifier {
+object SparkSVM extends Classifier with Serializable {
 
 	case class Params(input: String)
 

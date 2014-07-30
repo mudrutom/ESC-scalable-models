@@ -1,9 +1,9 @@
 package cz.cvut.esc.models.classifiers
 
 import org.apache.spark.mllib.classification.NaiveBayes
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.spark.{SparkConf, SparkContext}
 
-object SparkNaiveBayes extends Classifier {
+object SparkNaiveBayes extends Classifier with Serializable {
 
 	case class Params(input: String)
 
