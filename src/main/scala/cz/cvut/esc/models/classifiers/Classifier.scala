@@ -65,7 +65,7 @@ abstract class Classifier extends Serializable {
 	 * @param params input parameters
 	 * @return learned classification model
 	 */
-	abstract def trainClassifier(trainData: RDD[LabeledPoint], params: Params): ClassificationModel
+	def trainClassifier(trainData: RDD[LabeledPoint], params: Params): ClassificationModel
 
 	/** The main method. */
 	def main(args: Array[String]) {
