@@ -14,21 +14,35 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.8</jdk.version>
-		<scala.version>2.10</scala.version>
+		<scala.version>2.10.4</scala.version>
 		<spark.version>1.0.1</spark.version>
 	</properties>
 
 	<dependencies>
+		<!-- Scala dependencies -->
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>${scala.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-compiler</artifactId>
+			<version>${scala.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Spark dependencies -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-core_${scala.version}</artifactId>
+			<artifactId>spark-core_2.10</artifactId>
 			<version>${spark.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-mllib_${scala.version}</artifactId>
+			<artifactId>spark-mllib_2.10</artifactId>
 			<version>${spark.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -36,26 +50,28 @@
 		<!-- command line options parsing -->
 		<dependency>
 			<groupId>com.github.scopt</groupId>
-			<artifactId>scopt_${scala.version}</artifactId>
+			<artifactId>scopt_2.10</artifactId>
 			<version>3.2.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.scala-lang</groupId>
-					<artifactId>scala-library</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<groupId>org.scala-tools</groupId>
+				<artifactId>maven-scala-plugin</artifactId>
+				<version>2.15.2</version>
+				<executions>
+					<execution>
+						<id>scala-compile</id>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
+					<scalaVersion>${scala.version}</scalaVersion>
 				</configuration>
 			</plugin>
 			<plugin>
