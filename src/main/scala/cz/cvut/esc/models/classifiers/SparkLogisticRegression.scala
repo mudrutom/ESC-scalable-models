@@ -1,11 +1,11 @@
 package cz.cvut.esc.models.classifiers
 
-import cz.cvut.esc.models.classifiers.InputFormat._
+import cz.cvut.esc.models.InputFormat._
+import cz.cvut.esc.models.{CliApp, InputFormat, Params}
 import org.apache.spark.mllib.classification.{ClassificationModel, LogisticRegressionWithSGD}
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import scopt.OptionParser
-
 
 /** Parameters for the LogisticRegression app. */
 case class ParamsLR(

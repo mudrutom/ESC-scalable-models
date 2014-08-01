@@ -1,40 +1,19 @@
 package cz.cvut.esc.models.classifiers
 
+import cz.cvut.esc.models.{InputDataParser, Params}
 import org.apache.spark.mllib.classification.ClassificationModel
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.util.MLUtils
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
-import scopt.OptionParser
-
-/** Input data format enumeration. */
-object InputFormat extends Enumeration {
-	type InputFormat = Value
-	val SVM, LP = Value
-}
-
-import cz.cvut.esc.models.classifiers.InputFormat._
-
-/** Basic CLI input parameters. */
-abstract class Params {
-	def input: String
-	def inputFormat: InputFormat
-	def trainSplit: Double
-}
 
 /**
  * An abstraction of the (binary) classifier.
- *
- *
  */
-trait Classifier[P <: Params] {
+trait Classifier[P <: Params] extends InputDataParser[P] {
 
 	/** @return classifier name */
 	def name: String
-
-	/** @return seed for the random number generator */
-	def seed: Long = 11L
 
 	/** @return Spark configuration */
 	def sparkConf: SparkConf = new SparkConf().setAppName(name)
@@ -63,24 +42,6 @@ trait Classifier[P <: Params] {
 	}
 
 	/**
-	 * Parse and split the input data into train and test sets.
-	 * @param sc Spark context
-	 * @param params input parameters
-	 * @return train and test sets
-	 */
-	protected def parseAndSplitData(sc: SparkContext, params: P) = {
-		// parse the input data
-		val data = params.inputFormat match {
-			case SVM => MLUtils.loadLibSVMFile(sc, params.input)
-			case LP => MLUtils.loadLabeledData(sc, params.input)
-		}
-
-		// split data into training and test sets
-		val splits = data.randomSplit(Array(params.trainSplit, 1.0 - params.trainSplit), seed = seed)
-		(splits(0), splits(1))
-	}
-
-	/**
 	 * Evaluates the results of the classification.
 	 * @param prediction prediction and label pairs
 	 */
@@ -90,30 +51,5 @@ trait Classifier[P <: Params] {
 		val auROC = metrics.areaUnderROC()
 
 		println(s"Area under ROC = $auROC")
-	}
-}
-
-/**
- * CLI (Command Line Interface) application.
- */
-trait CliApp[P] {
-
-	/**
-	 * Returns option parameter parser with default values
-	 * @param args input arguments
-	 * @return default params and the parameter parser
-	 */
-	def paramsParser(args: Array[String]): (OptionParser[P], P)
-
-	def run(params: P)
-
-	/** The main method. */
-	def main(args: Array[String]) {
-		val (parser, default) = paramsParser(args)
-		parser.parse(args, default).map { params =>
-			run(params)
-		} getOrElse {
-			System.exit(1)
-		}
 	}
 }

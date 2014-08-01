@@ -1,6 +1,7 @@
 package cz.cvut.esc.models.classifiers
 
-import cz.cvut.esc.models.classifiers.InputFormat._
+import cz.cvut.esc.models.InputFormat._
+import cz.cvut.esc.models.{CliApp, InputFormat, Params}
 import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
@@ -45,5 +46,4 @@ object SparkNaiveBayes extends Classifier[ParamsBayes] with CliApp[ParamsBayes] 
 		// run training algorithm to build the model
 		NaiveBayes.train(trainData, params.lambda)
 	}
-
 }
