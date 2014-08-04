@@ -50,8 +50,8 @@ trait Classifier[P <: Params] extends InputDataParser[P] {
 	protected def evaluateBinaryClassifier(prediction: RDD[(Double, Double)]) {
 		// get evaluation metrics
 		val metrics = new BinaryClassificationMetrics(prediction)
-		val auROC = metrics.areaUnderROC()
+		val auPRC = metrics.areaUnderPR()
 
-		println(s"Area under ROC = $auROC")
+		println(s"Area under the Precision-Recall curve = $auPRC")
 	}
 }
