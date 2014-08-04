@@ -1,7 +1,9 @@
 package cz.cvut.esc.models
 
 import org.apache.spark.SparkContext
+import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.util.MLUtils
+import org.apache.spark.rdd.RDD
 
 /** Input data format enumeration. */
 object InputFormat extends Enumeration {
@@ -32,7 +34,7 @@ trait InputDataParser[P <: Params] {
 	 * @param params input parameters
 	 * @return train and test sets
 	 */
-	def parseAndSplitData(sc: SparkContext, params: P) = {
+	def parseAndSplitData(sc: SparkContext, params: P): (RDD[LabeledPoint], RDD[LabeledPoint]) = {
 		// parse the input data
 		val data = params.inputFormat match {
 			case SVM => MLUtils.loadLibSVMFile(sc, params.input)

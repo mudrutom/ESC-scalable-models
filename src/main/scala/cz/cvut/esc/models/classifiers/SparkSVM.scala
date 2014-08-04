@@ -24,7 +24,7 @@ object SparkSVM extends Classifier[ParamsSVM] with CliApp[ParamsSVM] with Serial
 
 	override def name = "SparkSVM"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsSVM], ParamsSVM) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsSVM](name) {
 			head("Support Vector Machine (SVM) classifier using Stochastic Gradient Descent")
 			arg[String]("<input>")

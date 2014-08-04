@@ -14,7 +14,7 @@ trait CliApp[P] {
 	 */
 	def paramsParser(args: Array[String]): (OptionParser[P], P)
 
-	def run(params: P)
+	def run(params: P): Unit
 
 	/** The main method. */
 	def main(args: Array[String]) {

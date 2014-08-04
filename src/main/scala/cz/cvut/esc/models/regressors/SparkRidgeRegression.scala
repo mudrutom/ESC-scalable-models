@@ -2,7 +2,7 @@ package cz.cvut.esc.models.regressors
 
 import cz.cvut.esc.models.InputFormat._
 import cz.cvut.esc.models.{CliApp, InputFormat, Params}
-import org.apache.spark.mllib.regression.{LabeledPoint, RegressionModel, RidgeRegressionWithSGD}
+import org.apache.spark.mllib.regression.{LabeledPoint, RidgeRegressionModel, RidgeRegressionWithSGD}
 import org.apache.spark.rdd.RDD
 import scopt.OptionParser
 
@@ -23,7 +23,7 @@ object SparkRidgeRegression extends Regressor[ParamsRidge] with CliApp[ParamsRid
 
 	override def name: String = "SparkRidgeRegression"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsRidge], ParamsRidge) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsRidge](name) {
 			head("Ridge regression using Stochastic Gradient Descent (with L2 regularization)")
 			arg[String]("<input>")
@@ -49,7 +49,7 @@ object SparkRidgeRegression extends Regressor[ParamsRidge] with CliApp[ParamsRid
 		(parser, new ParamsRidge())
 	}
 
-	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsRidge): RegressionModel = {
+	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsRidge): RidgeRegressionModel = {
 		// run training algorithm to build the model
 		RidgeRegressionWithSGD.train(trainData, params.iterations, params.stepSize, params.regParam)
 	}

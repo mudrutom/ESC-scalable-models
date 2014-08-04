@@ -42,7 +42,7 @@ object SparkDecisionTree extends Classifier[ParamsDT] with CliApp[ParamsDT] with
 
 	override def name = "SparkDecisionTree"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsDT], ParamsDT) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsDT](name) {
 			head("Decision tree classifier")
 			arg[String]("<input>")
@@ -65,7 +65,7 @@ object SparkDecisionTree extends Classifier[ParamsDT] with CliApp[ParamsDT] with
 		(parser, new ParamsDT())
 	}
 
-	override def trainClassifier(trainData: RDD[LabeledPoint], params: ParamsDT): ClassificationModel = null
+	override def trainClassifier(trainData: RDD[LabeledPoint], params: ParamsDT): ClassificationModel = throw new UnsupportedOperationException()
 
 	override def run(params: ParamsDT) = {
 		val sc = new SparkContext(sparkConf)

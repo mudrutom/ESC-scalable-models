@@ -2,7 +2,7 @@ package cz.cvut.esc.models.classifiers
 
 import cz.cvut.esc.models.InputFormat._
 import cz.cvut.esc.models.{CliApp, InputFormat, Params}
-import org.apache.spark.mllib.classification.{ClassificationModel, LogisticRegressionWithSGD}
+import org.apache.spark.mllib.classification.{LogisticRegressionModel, LogisticRegressionWithSGD}
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import scopt.OptionParser
@@ -23,7 +23,7 @@ object SparkLogisticRegression extends Classifier[ParamsLR] with CliApp[ParamsLR
 
 	override def name = "SparkLogisticRegression"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsLR], ParamsLR) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsLR](name) {
 			head("A classifier trained using Logistic Regression with Stochastic Gradient Descent")
 			arg[String]("<input>")
@@ -46,7 +46,7 @@ object SparkLogisticRegression extends Classifier[ParamsLR] with CliApp[ParamsLR
 		(parser, new ParamsLR())
 	}
 
-	override def trainClassifier(trainData: RDD[LabeledPoint], params: ParamsLR): ClassificationModel = {
+	override def trainClassifier(trainData: RDD[LabeledPoint], params: ParamsLR): LogisticRegressionModel = {
 		// run training algorithm to build the model
 		LogisticRegressionWithSGD.train(trainData, params.iterations, params.stepSize)
 	}

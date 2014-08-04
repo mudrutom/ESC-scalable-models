@@ -22,7 +22,7 @@ object SparkNaiveBayes extends Classifier[ParamsBayes] with CliApp[ParamsBayes] 
 
 	override def name = "SparkNaiveBayes"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsBayes], ParamsBayes) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsBayes](name) {
 			head("Naive Bayes Classifier")
 			arg[String]("<input>")

@@ -2,7 +2,7 @@ package cz.cvut.esc.models.regressors
 
 import cz.cvut.esc.models.InputFormat._
 import cz.cvut.esc.models.{CliApp, InputFormat, Params}
-import org.apache.spark.mllib.regression.{LabeledPoint, LinearRegressionWithSGD, RegressionModel}
+import org.apache.spark.mllib.regression.{LabeledPoint, LinearRegressionModel, LinearRegressionWithSGD}
 import org.apache.spark.rdd.RDD
 import scopt.OptionParser
 
@@ -23,7 +23,7 @@ object SparkLinearRegression extends Regressor[ParamsLinear] with CliApp[ParamsL
 
 	override def name: String = "SparkLinearRegression"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsLinear], ParamsLinear) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsLinear](name) {
 			head("Linear regression using Stochastic Gradient Descent (with no regularization)")
 			arg[String]("<input>")
@@ -49,7 +49,7 @@ object SparkLinearRegression extends Regressor[ParamsLinear] with CliApp[ParamsL
 		(parser, new ParamsLinear())
 	}
 
-	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsLinear): RegressionModel = {
+	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsLinear): LinearRegressionModel = {
 		// run training algorithm to build the model
 		LinearRegressionWithSGD.train(trainData, params.iterations, params.stepSize, params.regParam)
 	}

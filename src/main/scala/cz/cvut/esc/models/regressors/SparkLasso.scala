@@ -2,7 +2,7 @@ package cz.cvut.esc.models.regressors
 
 import cz.cvut.esc.models.InputFormat._
 import cz.cvut.esc.models.{CliApp, InputFormat, Params}
-import org.apache.spark.mllib.regression.{LabeledPoint, LassoWithSGD, RegressionModel}
+import org.apache.spark.mllib.regression.{LabeledPoint, LassoModel, LassoWithSGD}
 import org.apache.spark.rdd.RDD
 import scopt.OptionParser
 
@@ -24,7 +24,7 @@ object SparkLasso extends Regressor[ParamsLasso] with CliApp[ParamsLasso] with S
 
 	override def name: String = "SparkLasso"
 
-	override def paramsParser(args: Array[String]): (OptionParser[ParamsLasso], ParamsLasso) = {
+	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsLasso](name) {
 			head("Lasso regression using Stochastic Gradient Descent (with L1 regularization)")
 			arg[String]("<input>")
@@ -50,7 +50,7 @@ object SparkLasso extends Regressor[ParamsLasso] with CliApp[ParamsLasso] with S
 		(parser, new ParamsLasso())
 	}
 
-	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsLasso): RegressionModel = {
+	override def trainRegressor(trainData: RDD[LabeledPoint], params: ParamsLasso): LassoModel = {
 		// run training algorithm to build the model
 		LassoWithSGD.train(trainData, params.iterations, params.stepSize, params.regParam)
 	}
