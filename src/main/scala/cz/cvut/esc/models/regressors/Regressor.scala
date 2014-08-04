@@ -31,9 +31,12 @@ trait Regressor[P <: Params] extends InputDataParser[P] {
 
 		// parse and split the input data
 		val (train, test) = parseAndSplitData(sc, params)
+		val trainCached = train.cache()
 
 		// train the classifier
-		val model = trainRegressor(train.cache(), params)
+		val model = trainRegressor(trainCached, params)
+		trainCached.unpersist(blocking = false)
+
 
 		// evaluation on the test set
 		val prediction = model.predict(test.map(_.features)).zip(test.map(_.label))
