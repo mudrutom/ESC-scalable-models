@@ -32,11 +32,9 @@ trait Classifier[P <: Params] extends InputDataParser[P] {
 
 		// parse and split the input data
 		val (train, test) = parseAndSplitData(sc, params)
-		val trainCached = train.cache()
 
 		// train the classifier
-		val model = trainClassifier(trainCached, params)
-		trainCached.unpersist(blocking = false)
+		val model = trainClassifier(train.cache(), params)
 
 		// evaluation on the test set
 		val prediction = model.predict(test.map(_.features)).zip(test.map(_.label))
