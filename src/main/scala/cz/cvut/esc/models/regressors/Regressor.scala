@@ -46,7 +46,7 @@ trait Regressor[P <: Params] extends InputDataParser[P] {
 	 */
 	protected def evaluateRealValuedRegressor(prediction: RDD[(Double, Double)]) {
 		// compute the mean squared error
-		val mse = prediction map {case (p, l) => (p - l) * (p - l)} mean()
+		val mse = prediction.map(x => x._1 - x._2).map(x => x * x).mean()
 
 		println(s"Mean Squared Error = $mse")
 	}
