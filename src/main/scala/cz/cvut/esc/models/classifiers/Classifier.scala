@@ -45,7 +45,7 @@ trait Classifier[P <: Params] extends InputDataParser[P] {
 	 * Evaluates the results of the classification.
 	 * @param prediction prediction and label pairs
 	 */
-	protected def evaluateBinaryClassifier(prediction: RDD[(Double, Double)]) {
+	def evaluateBinaryClassifier(prediction: RDD[(Double, Double)]) {
 		// get evaluation metrics
 		val metrics = new BinaryClassificationMetrics(prediction)
 		val auPR = metrics.areaUnderPR()

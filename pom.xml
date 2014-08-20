@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.8</jdk.version>
 		<scala.version>2.10.4</scala.version>
-		<spark.version>1.0.1</spark.version>
+		<spark.version>1.0.2</spark.version>
 	</properties>
 
 	<dependencies>
@@ -43,6 +43,12 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-mllib_2.10</artifactId>
+			<version>${spark.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
 			<version>${spark.version}</version>
 			<scope>provided</scope>
 		</dependency>
