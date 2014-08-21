@@ -60,7 +60,7 @@ object Test extends CliApp[ParamsT] with InputDataParser[ParamsT] {
 		// split data into batches
 		val sequence = seqData.keys.distinct().collect()
 		val q = new mutable.Queue[RDD[(Double, LabeledPoint)]]()
-		for (s <- sequence) q.enqueue(seqData.filter(_._1 == s))
+		for (s <- sequence) q.enqueue(seqData.filter(_._1 == s).map{ case (_, lp) => (0.0, lp) })
 
 		// init stream
 		val ssc = new StreamingContext(sc, Seconds(1L))
@@ -71,7 +71,7 @@ object Test extends CliApp[ParamsT] with InputDataParser[ParamsT] {
 			if (points.size < 1) None
 			else {
 				// do the SVM training
-				val data = sc.makeRDD(points).cache()
+				val data = sc.parallelize(points, 1).cache()
 				val model = SparkSVM.trainClassifier(data, ParamsSVM())
 
 				// update the state
