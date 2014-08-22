@@ -33,8 +33,8 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 	/** @return Spark configuration */
 	def sparkConf: SparkConf = new SparkConf().setAppName(name)
 
-	/** The Spark context */
-	protected lazy val sc = new SparkContext(sparkConf)
+	/** @return Spark context */
+	def sc: SparkContext
 
 	/** Runs stream learning & evaluation process. */
 	def run(params: P) {
@@ -67,8 +67,9 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 			}
 		}
 
-		// apply update function and print the progress
-		stream.updateStateByKey(updateState).foreachRDD(_.values.foreach(s => println(s.stats)))
+		// apply the update function and print progress
+		val stateStream = stream.updateStateByKey(updateState)
+		stateStream.foreachRDD(_.values.foreach(s => println(s.stats.last)))
 
 		// start processing
 		ssc.start()
