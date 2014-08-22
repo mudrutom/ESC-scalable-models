@@ -22,7 +22,7 @@ case class ParamsLasso(
  */
 object SparkLasso extends Regressor[ParamsLasso] with CliApp[ParamsLasso] with Serializable {
 
-	override def name: String = "SparkLasso"
+	override def name = "SparkLasso"
 
 	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsLasso](name) {

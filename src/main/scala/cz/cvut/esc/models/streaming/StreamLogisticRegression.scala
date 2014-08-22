@@ -4,6 +4,9 @@ import cz.cvut.esc.models.CliApp
 import cz.cvut.esc.models.classifiers.{ParamsLR, SparkLogisticRegression}
 import org.apache.spark.SparkContext
 
+/**
+ * Streaming classifier using Logistic Regression with Stochastic Gradient Descent.
+ */
 object StreamLogisticRegression extends StreamingClassifier[ParamsLR] with CliApp[ParamsLR] with Serializable {
 
 	@transient

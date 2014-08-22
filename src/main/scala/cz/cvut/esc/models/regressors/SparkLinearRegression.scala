@@ -21,7 +21,7 @@ case class ParamsLinear(
  */
 object SparkLinearRegression extends Regressor[ParamsLinear] with CliApp[ParamsLinear] with Serializable {
 
-	override def name: String = "SparkLinearRegression"
+	override def name = "SparkLinearRegression"
 
 	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsLinear](name) {

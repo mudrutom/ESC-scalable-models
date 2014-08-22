@@ -1,6 +1,7 @@
 package cz.cvut.esc.models.classifiers
 
 import cz.cvut.esc.models.{InputDataParser, Params}
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.mllib.classification.ClassificationModel
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -28,6 +29,8 @@ trait Classifier[P <: Params] extends InputDataParser[P] {
 
 	/** Runs learning & evaluation process. */
 	def run(params: P) {
+		Logger.getRootLogger.setLevel(Level.WARN)
+
 		val sc = new SparkContext(sparkConf)
 
 		// parse and split the input data

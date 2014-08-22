@@ -2,6 +2,7 @@ package cz.cvut.esc.models.streaming
 
 import cz.cvut.esc.models.classifiers._
 import cz.cvut.esc.models.{InputDataParser, Params}
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.classification.ClassificationModel
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
@@ -38,6 +39,8 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 
 	/** Runs stream learning & evaluation process. */
 	def run(params: P) {
+		Logger.getRootLogger.setLevel(Level.WARN)
+
 		val ssc = new StreamingContext(sc, Seconds(1L))
 		ssc.checkpoint("temp")
 

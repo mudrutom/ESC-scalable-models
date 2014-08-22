@@ -2,6 +2,7 @@ package cz.cvut.esc.models.classifiers
 
 import cz.cvut.esc.models.InputFormat._
 import cz.cvut.esc.models.{CliApp, InputFormat, Params}
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.classification.ClassificationModel
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -68,6 +69,8 @@ object SparkDecisionTree extends Classifier[ParamsDT] with CliApp[ParamsDT] with
 	override def trainClassifier(trainData: RDD[LabeledPoint], params: ParamsDT): ClassificationModel = throw new UnsupportedOperationException()
 
 	override def run(params: ParamsDT) = {
+		Logger.getRootLogger.setLevel(Level.WARN)
+
 		val sc = new SparkContext(sparkConf)
 
 		// parse and split the input data

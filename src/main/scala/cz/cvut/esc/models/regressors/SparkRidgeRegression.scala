@@ -21,7 +21,7 @@ case class ParamsRidge(
  */
 object SparkRidgeRegression extends Regressor[ParamsRidge] with CliApp[ParamsRidge] with Serializable {
 
-	override def name: String = "SparkRidgeRegression"
+	override def name = "SparkRidgeRegression"
 
 	override def paramsParser(args: Array[String]) = {
 		val parser = new OptionParser[ParamsRidge](name) {

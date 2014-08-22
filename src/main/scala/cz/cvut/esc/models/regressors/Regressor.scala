@@ -1,6 +1,7 @@
 package cz.cvut.esc.models.regressors
 
 import cz.cvut.esc.models.{InputDataParser, Params}
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.regression.{LabeledPoint, RegressionModel}
 import org.apache.spark.rdd.RDD
@@ -27,6 +28,8 @@ trait Regressor[P <: Params] extends InputDataParser[P] {
 
 	/** Runs learning & evaluation process. */
 	def run(params: P) {
+		Logger.getRootLogger.setLevel(Level.WARN)
+
 		val sc = new SparkContext(sparkConf)
 
 		// parse and split the input data

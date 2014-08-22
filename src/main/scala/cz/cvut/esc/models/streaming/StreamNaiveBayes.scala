@@ -4,6 +4,9 @@ import cz.cvut.esc.models.CliApp
 import cz.cvut.esc.models.classifiers.{ParamsBayes, SparkNaiveBayes}
 import org.apache.spark.SparkContext
 
+/**
+ * Streaming classifier using Naive Bayes.
+ */
 object StreamNaiveBayes extends StreamingClassifier[ParamsBayes] with CliApp[ParamsBayes] with Serializable {
 
 	@transient
