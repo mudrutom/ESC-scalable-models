@@ -11,7 +11,7 @@ import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.StreamingContext._
 import org.apache.spark.streaming.dstream.DStream
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Duration, Milliseconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.{immutable, mutable}
@@ -37,15 +37,18 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 	/** @return Spark context */
 	def sc: SparkContext
 
+	/** @return one batch duration */
+	def batch: Duration = Milliseconds(500L)
+
 	/** Runs stream learning & evaluation process. */
 	def run(params: P) {
 		Logger.getRootLogger.setLevel(Level.WARN)
 
-		val ssc = new StreamingContext(sc, Seconds(1L))
+		val ssc = new StreamingContext(sc, batch)
 		ssc.checkpoint("temp")
 
 		// get the data stream
-		val stream = getDataStream(ssc, params)
+		val stream = getDataStream(ssc, params).window(batch * 2, batch * 1)
 
 		// create state-update function
 		val updateState = (points: Seq[LabeledPoint], state: Option[State]) => {
@@ -63,8 +66,8 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 						val bestAuPR = computeAuPR(s.bestModel, data)
 						State(
 							model = model,
-							bestModel = if (auPR > bestAuPR) Some(s.model) else s.bestModel,
-						  stats = s.stats :+ (bestAuPR, auPR > bestAuPR))
+							bestModel = if (bestAuPR.isNaN || auPR > bestAuPR) Some(s.model) else s.bestModel,
+						  stats = updateStats(s.stats, (bestAuPR, auPR > bestAuPR)))
 				}
 				Some(next)
 			}
@@ -72,11 +75,15 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 
 		// apply the update function and print progress
 		val stateStream = stream.updateStateByKey(updateState)
-		stateStream.foreachRDD(_.values.foreach(s => println(s.stats.last)))
+		stateStream.foreachRDD(_.values.foreach(s => if (s.stats.size > 0) println(s.stats.last + " avg=" + (s.stats.map(_._1).sum / s.stats.size))))
 
 		// start processing
 		ssc.start()
 		ssc.awaitTermination()
+	}
+
+	private def updateStats(stats: immutable.Seq[(Double, Boolean)], next: (Double, Boolean)) = {
+		if (next._1.isNaN) stats else (if (stats.size < 10) stats else stats.tail) :+ next
 	}
 
 	/**
@@ -126,7 +133,7 @@ trait StreamingClassifier[P <: Params] extends InputDataParser[P] {
 	 */
 	def computeAuPR(model: Option[ClassificationModel], data: RDD[LabeledPoint]): Double = {
 		model match {
-			case None => 0.0
+			case None => Double.NaN
 			case Some(m) =>
 				val prediction = m.predict(data.map(_.features)).zip(data.map(_.label))
 				val metrics = new BinaryClassificationMetrics(prediction)
